@@ -1,13 +1,13 @@
 <?php
 
-namespace Model
+namespace Model;
 
-class Locations implements Model\FinderInterface.php
+class Locations implements FinderInterface
 {
 	/**
 	*La liste des locations
 	*/
-	protected $locations = array("Grazac","Laptes","Yssingeaux","Le puy en velay");
+	private $locations = array("Grazac","Laptes","Yssingeaux","Le puy en velay");
 	
 	
 	/**
@@ -15,9 +15,49 @@ class Locations implements Model\FinderInterface.php
 	*/
 	public function create($location)
 	{
-		$this->locations[$id]= $location;
+		
+		$this->locations[]= $location;
 	}
 	
+	public function delete($id)
+	{
+		if(array_key_exists($id,$this->locations))
+		{
+			unset($this->locations[$id]);
+			$this->locations = array_values($this->locations);
+		}
+		else
+			throw new HttpException(404, "Location not foud");
+	}
 	
+	public function findAll()
+	{
+		return $this->locations;
+	}
 	
+    /**
+     * Retrieve an element by its id.
+     *
+     * @param  mixed      $id
+     * @return null|mixed
+     */
+    public function findOneById($id)
+	{
+		if(!array_key_exists($id,$this->locations))
+		{
+			throw new HttpException(404,"Location not found");
+		}
+		$location[0] = $id;
+		$location[1] = $this->locations[$id];
+		return $location;
+	}
+	
+	public function update($id, $values)
+	{
+		if(!array_key_exists($id,$this->locations))
+		{
+			throw new HttpException(404,"Location not found");
+		}
+		$this->locations[$id]=$values;
+	}
 }
