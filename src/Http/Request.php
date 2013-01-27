@@ -12,10 +12,19 @@ class Request
 
     const DELETE = 'DELETE';
 	
-	public function getMethod()
-	{
-		return isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : self::GET;
-	}
+	private $parameters = array();
+	
+    public function getMethod()
+    {
+        $method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : self::GET;
+
+        if (self::POST === $method) {
+            return $this->getParameter('_method', $method);
+        }
+
+        return $method;
+    }
+
 	
 	public function getUri()
 	{
@@ -31,4 +40,19 @@ class Request
 	{
 		return new self();
 	}
+	
+	public function __construct(array $query = array(), array $request = array())
+	{
+		$this->parameters = array_merge($query, $request);
+	}
+	
+    public function getParameter($name, $default = null)
+    {
+        if (array_key_exists($name, $this->parameters)) {
+            return $this->parameters[$name];
+        }
+
+        return $default;
+    }
+
 }
