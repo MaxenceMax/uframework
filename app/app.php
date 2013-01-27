@@ -48,9 +48,11 @@ $app->get('/locations/(\d+)',function($id) use ($app){
 
 
 
-$app->delete('/locations/(\d+)',function(){
+$app->delete('/locations/(\d+)',function($id) use ($app){
 	
-	$modelLoc = new Locations();	
+	$modelLoc = new Locations();
+	$modelLoc->delete($id);	
+	return $app->render('locations.php',array("location"=>$locations));
 
 });
 

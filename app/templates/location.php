@@ -13,5 +13,6 @@
 		</form>
 		
 		<a href="/locations/">Back</a>
+		<a href="/locations/delete/<?= $location[0]?>">delete</a>
 	</body>
 </html>

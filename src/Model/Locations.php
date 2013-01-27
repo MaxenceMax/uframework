@@ -7,16 +7,28 @@ class Locations implements FinderInterface
 	/**
 	*La liste des locations
 	*/
-	private $locations = array("Grazac","Laptes","Yssingeaux","Le puy en velay");
+	private $locations;
 	
+	public function __construct()
+	{
+		$string = file_get_contents("./../data/locations.json");
+		$this->locations = json_decode($string,true);
+	}
+	
+	private function saveJson()
+	{
+		$fp = fopen('./../data/locations.json', 'w');
+		fwrite($fp, json_encode($this->locations));
+		fclose($fp);
+	}
 	
 	/**
 	*
 	*/
 	public function create($location)
 	{
-		
 		$this->locations[]= $location;
+		$this->saveJson();
 	}
 	
 	public function delete($id)
@@ -25,6 +37,7 @@ class Locations implements FinderInterface
 		{
 			unset($this->locations[$id]);
 			$this->locations = array_values($this->locations);
+			$this->saveJson();
 		}
 		else
 			throw new HttpException(404, "Location not foud");
@@ -59,5 +72,6 @@ class Locations implements FinderInterface
 			throw new HttpException(404,"Location not found");
 		}
 		$this->locations[$id]=$values;
+		$this->saveJson();
 	}
 }
