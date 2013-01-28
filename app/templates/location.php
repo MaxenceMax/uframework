@@ -11,7 +11,11 @@
 		    <input type="submit" value="Update">
 		</form>
 		
+
+		<form action="/locations/<?= $location[0] ?>" method="POST">
+		    <input type="hidden" name="_method" value="DELETE">
+		    <input type="submit" value="Delete">
+		</form>
 		<a href="/locations/">Back</a>
-		<a href="/locations/delete/<?= $location[0]?>">delete</a>
 	</body>
 </html>

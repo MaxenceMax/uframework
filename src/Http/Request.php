@@ -38,7 +38,7 @@ class Request
 	
 	public static function createFromGlobals()
 	{
-		return new self();
+		return new self($_GET,$_POST);
 	}
 	
 	public function __construct(array $query = array(), array $request = array())

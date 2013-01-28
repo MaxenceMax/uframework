@@ -20,8 +20,6 @@ $app->get('/', function () use ($app) {
 
 $app->post('/locations/',function(Request $request) use($app){
 	$modelLoc = new Locations();
-	var_dump($request->getParameter('locationName'));
-	die;
 	$modelLoc->create($request->getParameter('locationName'));
 	$locations = $modelLoc->findAll();
 	$app->redirect('/locations/');
@@ -57,10 +55,9 @@ $app->get('/locations/(\d+)',function(Request $request, $id) use ($app){
 
 
 $app->delete('/locations/(\d+)', function (Request $request, $id) use ($app) {
-		
 	$modelLoc = new Locations();
 	$modelLoc->delete($id);	
-	return $app->render('locations.php',array("location"=>$locations));
+	return $app->redirect('/locations/');
 
 });
 
