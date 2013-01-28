@@ -15,17 +15,24 @@ $app = new \App(new View\TemplateEngine(
  * Index
  */
 $app->get('/', function () use ($app) {
-    return $app->render('index.php');
+    return $app->redirect('/locations/');
 });
 
 $app->post('/locations/',function(Request $request) use($app){
 	$modelLoc = new Locations();
-	$modelLoc->create($_POST['locationName']);
+	var_dump($request->getParameter('locationName'));
+	die;
+	$modelLoc->create($request->getParameter('locationName'));
 	$locations = $modelLoc->findAll();
-	$app->redirect('/locations');
+	$app->redirect('/locations/');
 
 });
-	
+
+$app->put('/locations/(\d+)', function (Request $request, $id) use ($app) {
+    $location = new Locations();
+    $location->update($id, $request->getParameter('name'));
+    $app->redirect('/locations/');
+});
 	
 $app->get('/locations/',function(Request $request) use ($app){
 	

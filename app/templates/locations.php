@@ -10,7 +10,7 @@
 			<?php endforeach;?>
 		</ul>
 		
-		<form action="/locations" method="post">
+		<form action="/locations/" method="post">
 			<input type="text" name="locationName" />
 			<input type="submit" value="Add New" />
 		</form>

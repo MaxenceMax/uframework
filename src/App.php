@@ -134,6 +134,7 @@ class App
 			array_unshift($arguments, $request);
 
 			$response = call_user_func_array($route->getCallable(), $arguments);
+			echo $response;
         } catch (HttpException $e) {
             throw $e;
         } catch (\Exception $e) {
