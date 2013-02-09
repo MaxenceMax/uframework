@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS locations
+(
+       id int NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+       name VARCHAR(250) NOT NULL,
+       created_at DATETIME NOT NULL
+)

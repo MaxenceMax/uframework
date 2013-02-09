@@ -33,14 +33,9 @@ class Locations implements FinderInterface
 	
 	public function delete($id)
 	{
-		if(array_key_exists($id,$this->locations))
-		{
-			unset($this->locations[$id]);
-			$this->locations = array_values($this->locations);
-			$this->saveJson();
-		}
-		else
-			throw new HttpException(404, "Location not foud");
+		unset($this->locations[$id]);
+		$this->locations = array_values($this->locations);
+		$this->saveJson();
 	}
 	
 	public function findAll()
@@ -58,7 +53,7 @@ class Locations implements FinderInterface
 	{
 		if(!array_key_exists($id,$this->locations))
 		{
-			throw new HttpException(404,"Location not found");
+			return null;
 		}
 		$location[0] = $id;
 		$location[1] = $this->locations[$id];
@@ -67,10 +62,6 @@ class Locations implements FinderInterface
 	
 	public function update($id, $values)
 	{
-		if(!array_key_exists($id,$this->locations))
-		{
-			throw new HttpException(404,"Location not found");
-		}
 		$this->locations[$id]=$values;
 		$this->saveJson();
 	}

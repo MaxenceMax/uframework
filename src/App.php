@@ -5,6 +5,8 @@ use Exception\HttpException;
 use Routing\Route;
 use View\TemplateEngineInterface;
 use Http\Request;
+use Http\Response;
+use Http\JsonResponse;
 
 class App
 {
@@ -103,8 +105,6 @@ class App
         return $this;
     }
 
-    // Something is missing here...
-
     public function run(Request $request = null)
     {
 		if (null === $request) {
@@ -113,7 +113,6 @@ class App
 		
 		$method = $request->getMethod();
 	    $uri    = $request->getUri();
-
         foreach ($this->routes as $route) {
             if ($route->match($method, $uri)) {
                 return $this->process($request,$route);
@@ -129,14 +128,24 @@ class App
     private function process(Request $request,Route $route)
     {
         try {
-            http_response_code($this->statusCode);
 			$arguments = $route->getArguments();
 			array_unshift($arguments, $request);
 
 			$response = call_user_func_array($route->getCallable(), $arguments);
-			echo $response;
+
+			if (!$response instanceof Response) {
+			    $response = new Response($response);
+			}
+
+			$response->send();
+			
         } catch (HttpException $e) {
-            throw $e;
+            if ($request->guessBestFormat() === 'json') {
+                return new JsonResponse($e->getMessage(), $e->getStatusCode());
+            }
+            else {
+                throw $e;
+            }
         } catch (\Exception $e) {
             throw new HttpException(500, null, $e);
         }
