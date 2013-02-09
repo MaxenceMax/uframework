@@ -5,9 +5,11 @@
 	</head>
 	<body>
 		<ul>
-			<?php foreach($location as $id => $location): ?>
-				<li><a href="/locations/<?= $id ?>"><?= $location ?></a></li>
-			<?php endforeach;?>
+			<?php if($locations != null):?>
+				<?php foreach($locations as $location): ?>
+					<li><a href="/locations/<?= $location->getId() ?>"><?= $location->getName() ?></a></li>
+				<?php endforeach;?>
+			<?php endif;?>
 		</ul>
 		
 		<form action="/locations/" method="post">

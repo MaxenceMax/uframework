@@ -7,6 +7,12 @@ use Http\Response;
 use Http\JsonResponse;
 use Exception\HttpException;
 
+use Model\CommentFinder;
+use Model\Connection;
+use Model\Location;
+use Model\LocationFinder;
+use Model\LocationDataMapper;
+
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -21,6 +27,11 @@ $serializer = new Serializer($normalizers, $encoders);
 
 // Config
 $debug = true;
+$dsn      = 'mysql:host=localhost;dbname=uframework';
+$user     = 'uframework';
+$password = 'uframework123';
+
+$con = new Connection($dsn, $user, $password);
 
 $app = new \App(new View\TemplateEngine(
     __DIR__ . '/templates/'
@@ -36,70 +47,74 @@ $app->get('/', function () use ($app) {
 /**
 * Add a new location
 */
-$app->post('/locations/',function(Request $request) use($app,$serializer){
+$app->post('/locations/',function(Request $request) use($app,$serializer,$con){
 	
-	$modelLoc = new Locations();
-	if ($request->guessBestFormat() === 'json') {
-        return new JsonResponse($serializer->serialize($modelLoc->create($request->getParameter('name')), 'json'));
-    }
+	$modelLoc = new LocationDataMapper($con);
+	// if ($request->guessBestFormat() === 'json') {
+	 //        return new JsonResponse($serializer->serialize($modelLoc->create($request->getParameter('name')), 'json'));
+	 //    }
 	$tmp = trim($request->getParameter('locationName'));
 	if( empty($tmp))
 	{
 		throw new HttpException(404,"Name empty");
 	}
-	$modelLoc->create($tmp);
-	$locations = $modelLoc->findAll();
+	$location = new Location(null,$tmp);
+	$modelLoc->persist($location);
+	
 	$app->redirect('/locations/');
 });
 
 /**
 * Update a location
 */
-$app->put('/locations/(\d+)', function (Request $request, $id) use ($app,$serializer) {
-    $location = new Locations();
+$app->put('/locations/(\d+)', function (Request $request, $id) use ($app,$serializer,$con) {
+    $mapper = new LocationDataMapper($con);
     $tmp = trim($request->getParameter('name'));
 	if( $tmp=== "")
 	{
 		throw new HttpException(404,"Name empty");
 	}
-	if ($request->guessBestFormat() === 'json') {
-        return new JsonResponse($serializer->serialize($location->update($id, $request->getParameter('name')), 'json'));
-    }
-    $location->update($id, $request->getParameter('name'));
+	// if ($request->guessBestFormat() === 'json') {
+ 	//  return new JsonResponse($serializer->serialize($location->update($id, $request->getParameter('name')), 'json'));
+ 	//}
+	$finder = new LocationFinder($con);
+	$location = $finder->findOneById($id);
+	$location->setName($tmp);
+
+	$mapper->persist($location);
     $app->redirect('/locations/');
 });
 
 /**
 * Get all locations
 */
-$app->get('/locations/',function(Request $request) use ($app,$serializer){
+$app->get('/locations/',function(Request $request) use ($app,$con,$serializer){
 	
-	$modelLoc = new Locations();
-	
+	$modelLoc = new LocationFinder($con);
+
 	$locations = $modelLoc->findAll();
 
 	if ($request->guessBestFormat() === 'json') {
         return new JsonResponse($serializer->serialize($locations, 'json'));
     }
 	
-	return $app->render('locations.php',array("location"=>$locations));
+	return $app->render('locations.php',array("locations"=>$locations));
 });
 
 /**
 * get a location by id
 */
-$app->get('/locations/(\d+)',function(Request $request, $id) use ($app,$serializer){
-	$modelLoc = new Locations();
-	$tmp = $modelLoc->findOneById($id);
-	if($tmp === null)
+$app->get('/locations/(\d+)',function(Request $request, $id) use ($app,$serializer,$con){
+	$finder = new LocationFinder($con);
+	$location = $finder->findOneById($id);
+	$location->setComments((new CommentFinder($con))->findAllForLocation($location));
+	if($location === null)
 	{
 		throw new HttpException(404,"Location not found");
 	}
-	if ($request->guessBestFormat() === 'json') {
-        return new JsonResponse($serializer->serialize($tmp, 'json'));
-    }
-
-	$location = $modelLoc->findOneById($id);
+	// if ($request->guessBestFormat() === 'json') {
+ //        return new JsonResponse($serializer->serialize($tmp, 'json'));
+ //    }
 	
 	return $app->render('location.php',array("location"=>$location));
 	
@@ -110,18 +125,20 @@ $app->get('/locations/(\d+)',function(Request $request, $id) use ($app,$serializ
 /**
 * Delete a location by id
 */
-$app->delete('/locations/(\d+)', function (Request $request, $id) use ($app,$serializer) {
-	$modelLoc = new Locations();
-	$tmp = $modelLoc->findOneById($id);
-	if($tmp === null)
+$app->delete('/locations/(\d+)', function (Request $request, $id) use ($app,$serializer,$con) {
+	$finder = new LocationFinder($con);
+
+	$location = $finder->findOneById($id);
+	if($location === null)
 	{
 		throw new HttpException(404,"Location not found");
 		
 	}
-	if ($request->guessBestFormat() === 'json') {
-        return new JsonResponse($serializer->serialize($modelLoc->delete($id), 'json'));
-    }
-	$modelLoc->delete($id);	
+	// if ($request->guessBestFormat() === 'json') {
+ //        return new JsonResponse($serializer->serialize($modelLoc->delete($id), 'json'));
+ //    }
+	$mapper = new LocationDataMapper($con);
+	$mapper->remove($location);
 	return $app->redirect('/locations/');
 
 });
