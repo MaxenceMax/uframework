@@ -17,13 +17,34 @@ class Location
 	* Location Date
 	*/
 	private $created_at;
-
+    /**
+    * locations comments
+    */
     private $comments;
+    /**
+    * locations parties
+    */
+    private $parties;
+    /**
+    * locations phone number
+    */
+    private $phone;
+    /**
+    * locations presentation
+    */
+    private $presentation;
+    /**
+    * locations presentation
+    */
+    private $address;
 
-	public function __construct($id, $name, \DateTime $created_at=null)
+	public function __construct($id, $name, \DateTime $created_at=null,$phone,$address,$presentation)
     {
         $this->id   = $id;
         $this->name = strip_tags($name);
+        $this->phone  = $phone;
+        $this->address = $address;
+        $this->presentation = $presentation;
 
         if (empty($created_at))
             $this->created_at = new \DateTime();
@@ -52,14 +73,33 @@ class Location
         return $this->created_at;
     }
 
+    public function setComments($comments)
+    {
+        $this->comments = $comments;
+    }
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+    
+    public function getAdresse()
+    {
+        return $this->address;
+    }
+    
     public function getComments()
     {
         return $this->comments;
     }
-
-    public function setComments($comments)
+    
+    public function getParty()
     {
-        $this->comments = $comments;
+        return $this->party;
+    }
+    
+    public function getPresentation()
+    {
+        return $this->presentation;
     }
 
 }

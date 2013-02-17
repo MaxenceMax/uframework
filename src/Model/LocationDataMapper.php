@@ -15,13 +15,13 @@ class LocationDataMapper
     public function persist($location)
     {
         if (null === $location->getId()) {
-            $this->con->executeQuery("INSERT INTO locations (name, created_at) VALUES (:name, :created_at)",
-                    array('name'=> $location->getName(),'created_at' => $location->getCreatedAt()->format('Y-m-d H:i:s'),));
+            $this->con->executeQuery("INSERT INTO locations (name,created_at,address,phone,presentation) VALUES (:name, :created_at,:address,:phone,:presentation)",
+                    array('name'=> $location->getName(),'created_at' => $location->getCreatedAt()->format('Y-m-d H:i:s'),"address"=>$location->getAdresse(),"phone"=>$location->getPhone(),"presentation"=>$location->getPresentation()));
             return $this->con->lastInsertId();
         }
         else {
-            $this->con->executeQuery("UPDATE locations SET name = :name WHERE id = :id",
-                    array('id'=> $location->getId(),'name' => $location->getName(),));
+            $this->con->executeQuery("UPDATE locations SET name = :name, address = :address, phone = :phone, presentation = :presentation WHERE id = :id",
+                    array('id'=>$location->getId(),'name'=> $location->getName(),"phone"=>$location->getPhone(),"presentation"=>$location->getPresentation()));
             return $location->getId();
         }
     }

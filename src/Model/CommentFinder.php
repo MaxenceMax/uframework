@@ -58,10 +58,10 @@ class CommentFinder implements FinderInterface
     private function maj($cur)
     {
         $date = (null === $cur['created_at']) ? null : new \DateTime($cur['created_at']);
-        $location = new Comment($cur['username'], $cur['body'], $date);
-        $location->setId($cur['id']);
+        $comment = new Comment($cur['username'],$cur['body'], $date);
+        $comment->setId($cur['id']);
 
-        return $location;
+        return $comment;
     }
 
 }

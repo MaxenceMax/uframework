@@ -7,9 +7,12 @@ Mettre en place les bases de données dans vagrant :
 	mysql uframework -uuframework -puframework123 < app/config/schema.sql
 
 Ce qui est fait :
-	La mise en place du DataMapper pour les locations :
-		-ajout,suppression, affichage.
-	Pour les commentaires :
-		-Affichages des commentaires si la location en a.
+	La partie frontend pour les commentaires, et les locations
 
-En ce qui concerne le JSON, il était opérationnel pour le TP3 mais la mise à jour n'a pas était faite.
+Ce qui n'a pas été fait :
+	-la partie frontend des soirées.
+	-La partie backend.
+	-Les tests plus que nécessaires.
+
+Nous avions beaucoup de projet cette semaine, nous n'avons pas pu tous les mener à bien.
+En tout cas merci pour ces cours, j'ai pu comprendre pas mal de point au niveau PHP. Je vais pouvoir être meilleur en entreprise grâce à vous deux. Bonne soirée.

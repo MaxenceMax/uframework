@@ -13,10 +13,13 @@ class Comment
 
     private $created_at;
 
-    public function __construct($username, $body, \DateTime $created_at=null)
+    private $location_id;
+
+    public function __construct($username, $body, \DateTime $created_at=null,$location_id=null)
     {
         $this->username = strip_tags($username);
         $this->body     = strip_tags($body);
+        $this->location_id = $location_id;
         if(empty($created_at))
             $this->created_at = new \DateTime();
         else
@@ -34,6 +37,15 @@ class Comment
         return $this->id = $id;
     }
 
+    public function getLocationId()
+    {
+        return $this->location_id;
+    }
+
+    public function setLocationId($id)
+    {
+        return $this->location_id = $id;
+    }
 
     public function getUsername()
     {
