@@ -57,7 +57,7 @@ class PartyFinder implements FinderInterface
             $this->parties[$cur['id']] = $this->hydrate($cur);
         }
 
-        return $this->comments;
+        return $this->parties;
     }
 
     public function hydrate($cur)

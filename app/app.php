@@ -14,6 +14,7 @@ use Model\LocationFinder;
 use Model\LocationDataMapper;
 use Model\Party;
 use Model\PartyFinder;
+use Model\PartyMapper;
 use Model\CommentDataMapper;
 use Model\Comment;
 
@@ -87,6 +88,16 @@ $app->get('/comments/new',function(Request $request) use ($app,$con,$serializer)
 	}
 	return $app->render('newComment.php',array("location_id"=>$location_id));
 });
+
+/**
+* New party form
+*/
+$app->get('/party/new',function(Request $request) use ($app,$con,$serializer){
+	$modelLoc = new LocationFinder($con);
+	$locations = $modelLoc->findAll();
+	return $app->render('newParty.php',array("locations"=>$locations));
+});
+
 
 
 /**
@@ -164,6 +175,23 @@ $app->put('/locations/(\d+)', function (Request $request, $id) use ($app,$serial
 });
 
 /**
+* Get All Parties
+*/
+$app->get('/parties',function(Request $request) use ($app,$con,$serializer)
+{
+	$modelPar = new PartyFinder($con);
+
+	$parties = $modelPar->findAll();
+
+	if ($request->guessBestFormat() === 'json') {
+        return new JsonResponse($serializer->serialize($locations, 'json'));
+    }
+		
+	return $app->render('parties.php',array("parties"=>$parties));
+});
+
+
+/**
 * Get all locations
 */
 $app->get('/locations',function(Request $request) use ($app,$con,$serializer){
@@ -197,8 +225,9 @@ $app->get('/locations/(\d+)',function(Request $request, $id) use ($app,$serializ
  	if ($request->guessBestFormat() === 'json') 
  	{
  	  return new JsonResponse(201,$id);
- 	}	
- 	$location->setComments((new CommentFinder($con))->findAllForLocation($location));
+ 	}
+ 	$location->setComments((new CommentFinder($con))->findAllForLocation($location));	
+ 	$location->setParties((new PartyFinder($con))->findAllForLocation($location));
 	return $app->render('location.php',array("location"=>$location));
 	
 });

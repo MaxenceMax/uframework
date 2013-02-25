@@ -28,7 +28,7 @@
 				<a href="http://maps.google.fr/maps?f=q&amp;source=embed&amp;hl=fr&amp;geocode=&amp;q=<?= $location->getName()."+".$location->getAdresse()?>&amp;aq=&amp;ie=UTF8&amp;hq=&amp;hnear=<?= $location->getName()."+".$location->getAdresse()?>&amp;t=m&amp;z=14" style="color:#0000FF;text-align:left">Agrandir le plan</a>
 			</small>
 		</center>
-			<div class="mod dash">
+			<div class="mod dash" style="width:45%;float:left">
 				<div class="inner">
 					<div class="hd">
 						<h3 class="plm">Informations :</h3>
@@ -53,10 +53,38 @@
 					</div>
 				</div>
 			</div>
-			<div class="form-actions">
-				<a href="/locations" class="btn mlm"><i class="icon-list-alt"></i> Back to list</a>
+			<div class="mod dash" style="width:45%; float:left">
+				<div class="inner">
+					<div class="hd">
+						<h3 class="plm">Parties for this location :</h3>
+					</div>
+					<div class="bd">
+						<div class="table mtm">
+							<table class="table table-bordered table-striped mbn">
+								<tr>
+									<th>Message</th>
+									<th>Party Time</th>
+								</tr>
+								<?php if(count($location->getParties()) > 0):?>
+									<?php foreach ($location->getParties() as $party) :?>
+										<tr>
+											<td><?= $party->getMessage() ?></td>
+											<td><?= $comment->getPartyTime()->format("D j M G:i Y").")"?></td>
+										</tr>
+									<?php endforeach;?>
+								<?php endif;?>
+							</table>
+						</div>
+					</div>
+				</div>
 			</div>
-			<div class="mod dash">
+			<div class="form-actions" style="clear:both">
+					<a href="/locations" class="btn mlm"><i class="icon-list-alt"></i> Back to list</a>
+					<div class="fRight">
+						<a href="/party/new?location_id=<?= $location->getId()?>" class="btn btn-success"><i class="icon-plus icon-white"></i>New party in this location</a>
+					</div>
+			</div>
+			<div class="mod dash" style="clear:both">
 				<div class="inner">
 					<div class="hd">
 						<h3 class="plm">Comments :</h3>
@@ -87,10 +115,5 @@
 				</div>
 			</div>
 		</div>
-			
-		<?php if($location->getComments() != null):?>
-		<table>
-
-		<?php endif;?>
 	</body>
 </html>

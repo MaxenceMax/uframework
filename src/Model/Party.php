@@ -7,13 +7,12 @@ class Party
     private $id;
     private $location_id;
     private $message;
-    private $createdAt;
+    private $party_time;
 
-	public function __construct($message,$createdAt)
+	public function __construct($message,$createdAt,$location_id)
 	{
-		$this->id = $id;
-		$this->idLoc = $idLoc;
-		$this->desc = $desc;
+		$this->location_id = $location_id;
+		$this->message = $message;
 		$this->createdAt = $createdAt;
 	}
 	
@@ -22,7 +21,7 @@ class Party
 		return $this->id;
 	}
 	
-	public function getIdLoc()
+	public function getLocationId()
 	{
 		return $this->location_id;
 	}
@@ -32,7 +31,7 @@ class Party
 		return $this->message;
 	}
 	
-	public function getCreatedAt()
+	public function getPartyTime()
 	{
 		return $this->createdAt;
 	}

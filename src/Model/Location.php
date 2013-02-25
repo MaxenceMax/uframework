@@ -77,6 +77,10 @@ class Location
     {
         $this->comments = $comments;
     }
+    public function setParties($parties)
+    {
+        $this->parties = $parties;
+    }
     public function getPhone()
     {
         return $this->phone;
@@ -92,9 +96,9 @@ class Location
         return $this->comments;
     }
     
-    public function getParty()
+    public function getParties()
     {
-        return $this->party;
+        return $this->parties;
     }
     
     public function getPresentation()
